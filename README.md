@@ -1,4 +1,6 @@
-# Softonic Generic Jenkins
+# Softonic Jenkins
+
+[![](https://images.microbadger.com/badges/version/basi/jenkins.svg)](https://microbadger.com/images/basi/jenkins "basi/jenkins")
 
 This image is designed to allow the execution of any job that contains a _dockerized_ environment.
 
