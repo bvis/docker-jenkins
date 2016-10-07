@@ -1,8 +1,9 @@
-FROM jenkinsci/jenkins:2.11
+FROM jenkinsci/jenkins:2.23
 
 MAINTAINER Basilio Vera <basilio.vera@softonic.com>
 
-ENV DOCKER_COMPOSE_VERSION 1.8.0-rc1
+ENV "DOCKER_COMPOSE_VERSION=1.8.1" \
+    "JENKINS_HOME_BACKUP_DIR=/backup/jenkins_home"
 
 # if we want to install via apt
 USER root
@@ -18,4 +19,12 @@ RUN apt-get update \
 
 USER jenkins
 COPY plugins.txt /usr/share/jenkins/plugins.txt
-RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt
+COPY jenkins-restore-backup.sh /usr/local/bin/jenkins-restore-backup.sh
+RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt \
+    && echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
+
+# Auto-health check to the root page
+HEALTHCHECK --interval=30s --timeout=2s \
+  CMD curl -f -A "Docker-HealthCheck/v.x (https://docs.docker.com/engine/reference/builder/#healthcheck)" http://localhost:8080/ || exit 1
+
+ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins-restore-backup.sh"]

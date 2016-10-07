@@ -1,2 +1,5 @@
 jenkins_home
 jenkins-cli.jar
+.idea
+.git
+.gitignore
