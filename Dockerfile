@@ -24,7 +24,7 @@ COPY jenkins-restore-backup.sh /usr/local/bin/jenkins-restore-backup.sh
 #    && echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
 
 # Auto-health check to the root page. We add such high values because of a bug when Docker is starting the service, for Jenkins these could be acceptable.
-HEALTHCHECK --interval=60s --timeout=5s --retries=30 \
-  CMD curl -f -A "Docker-HealthCheck/v.x (https://docs.docker.com/engine/reference/builder/#healthcheck)" http://localhost:8080/ || exit 1
+#HEALTHCHECK --interval=60s --timeout=5s --retries=3 \
+#  CMD curl -f -A "Docker-HealthCheck/v.x (https://docs.docker.com/engine/reference/builder/#healthcheck)" http://localhost:8080/ || exit 1
 
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins-restore-backup.sh"]
