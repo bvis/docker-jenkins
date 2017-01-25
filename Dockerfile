@@ -2,6 +2,21 @@ FROM jenkinsci/jenkins:2.42
 
 MAINTAINER Basilio Vera <basilio.vera@softonic.com>
 
+LABEL org.label-schema.vendor="basi" \
+    org.label-schema.name="Jenkins" \
+    org.label-schema.description="Jenkins with restore from backup dir option" \
+    org.label-schema.usage="/README.md" \
+    org.label-schema.url="https://github.com/bvis/docker-jenkins/blob/master/README.md" \
+    org.label-schema.vcs-url=$vcs_url \
+    org.label-schema.vcs-branch=$vcs_branch \
+    org.label-schema.vcs-ref=$commit_hash \
+    org.label-schema.version=$version \
+    org.label-schema.schema-version="1.0" \
+    org.label-schema.docker.cmd.devel="" \
+    org.label-schema.docker.params="DOCKER_COMPOSE_VERSION=Docker compose version to use,\
+JENKINS_HOME_BACKUP_DIR=Where to find the backup of the jenkins data" \
+    org.label-schema.build-date=$build_date
+
 ENV "DOCKER_COMPOSE_VERSION=1.10.0" \
     "JENKINS_HOME_BACKUP_DIR=/backup/jenkins_home"
 
