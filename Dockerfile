@@ -2,6 +2,12 @@ FROM jenkinsci/jenkins:2.42
 
 MAINTAINER Basilio Vera <basilio.vera@softonic.com>
 
+ARG "version=0.1.0-dev"
+ARG "build_date=unknown"
+ARG "commit_hash=unknown"
+ARG "vcs_url=unknown"
+ARG "vcs_branch=unknown"
+
 LABEL org.label-schema.vendor="basi" \
     org.label-schema.name="Jenkins" \
     org.label-schema.description="Jenkins with restore from backup dir option" \
