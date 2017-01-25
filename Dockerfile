@@ -2,7 +2,7 @@ FROM jenkinsci/jenkins:2.23
 
 MAINTAINER Basilio Vera <basilio.vera@softonic.com>
 
-ENV "DOCKER_COMPOSE_VERSION=1.8.1" \
+ENV "DOCKER_COMPOSE_VERSION=1.10.0" \
     "JENKINS_HOME_BACKUP_DIR=/backup/jenkins_home"
 
 # if we want to install via apt
