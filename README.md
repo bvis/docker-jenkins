@@ -26,8 +26,8 @@ docker run --rm --name softonic-jenkins \
 
 ```
 
-This image can restore a jenkins home backup if you mount a valid directory under the $JENKINS_HOME_BACKUP_DIR variable.
-Internally it will search for this directory, if it exists in the container and the /var/jenkins_home is empty it will copy the content of the first directory in the second.
+This image can restore a jenkins home backup if you mount a valid directory under the `$JENKINS_HOME_BACKUP_DIR` variable.
+Internally it will search for this directory, if it exists in the container and the `/var/jenkins_home` is empty it will copy the content of the last subdirectory found of `$JENKINS_HOME_BACKUP_DIR` in `/var/jenkins_home`.
 
 When can this be useful? When you want not to affect performance to the jenkins process mounting a remote volume but you want to ensure that your content will have a backup.
 Of course this works restoring a backup but for update the backup content you need to do something else, for example you can create a silly job that just copies the content from $JENKINS_HOME to $JENKINS_HOME_BACKUP_DIR.
@@ -69,7 +69,3 @@ The docker client will build your project, make it run with the definitions prov
 In this example I finally execute integration tests based on behat that are generating JUnit output as well, once it's finished the projects is removed.
 
 After this you need to use the JUnit generated files in the project workspace as usual.
-
-## TODO
-
-I've seen that sometimes when I kill the project containers the Jenkins container is killed as well. Check why could it be hapenning.
