@@ -1,4 +1,4 @@
-FROM jenkinsci/jenkins:2.43
+FROM jenkinsci/jenkins:2.49-alpine
 
 MAINTAINER Basilio Vera <basilio.vera@softonic.com>
 
@@ -23,24 +23,24 @@ LABEL org.label-schema.vendor="basi" \
 JENKINS_HOME_BACKUP_DIR=Where to find the backup of the jenkins data" \
     org.label-schema.build-date=$build_date
 
-ENV "DOCKER_COMPOSE_VERSION=1.10.0" \
+ENV "DOCKER_COMPOSE_VERSION=1.11.2" \
     "JENKINS_HOME_BACKUP_DIR=/backup/jenkins_home"
 
 # if we want to install via apt
 USER root
 
 # Install dependencies
-RUN apt-get update \
-      && apt-get install -y sudo \
-      && rm -rf /var/lib/apt/lists/* \
-      && curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose \
-      && chmod +x /usr/local/bin/docker-compose \
+RUN apk add --no-cache sudo \
+ && rm -rf /var/lib/apt/lists/* \
+  && curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose \
+  && chmod +x /usr/local/bin/docker-compose \
 # Jenkins user can execute Docker
-      && echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
+  && echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
 
 USER jenkins
 COPY plugins.txt /usr/share/jenkins/plugins.txt
 COPY jenkins-restore-backup.sh /usr/local/bin/jenkins-restore-backup.sh
+RUN /usr/local/bin/install-plugins.sh $(cat /usr/share/jenkins/plugins.txt | tr '\n' ' ')
 #RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt \
 #    && echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
 
