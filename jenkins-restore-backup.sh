@@ -7,11 +7,17 @@ if [ ! -d "$JENKINS_HOME" ]; then
 fi
 
 if [ -d "$JENKINS_HOME_BACKUP_DIR" ] && [ "$(ls -A $JENKINS_HOME_BACKUP_DIR)" ]; then
-  if [ -z "$(ls -lsA --ignore='.*' $JENKINS_HOME | grep -v 'total 0')" ]; then
+  echo "Backup dir found"
+  if [ -z "$(ls -lsA1 $JENKINS_HOME | grep -v 'total 0')" ]; then
     JENKINS_LAST_BACKUP=$(ls -1v $JENKINS_HOME_BACKUP_DIR | tail -1)
+    echo "Last backup is $JENKINS_LAST_BACKUP"
     if [ -f "${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP}" ]; then
-        tar xzfv ${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP} $JENKINS_HOME
+        echo "Uncompressing and copying '${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP}' in $JENKINS_HOME..."
+        set -x
+        tar xzfv ${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP} --directory /
+        set +x
     else
+        echo "It seems that the last backup is a dir, just copying!"
         cp -r ${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP}/* $JENKINS_HOME
     fi
     echo "Content in backup dir '${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP}' copied to home dir '$JENKINS_HOME'"
