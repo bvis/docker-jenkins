@@ -14,7 +14,7 @@ if [ -d "$JENKINS_HOME_BACKUP_DIR" ] && [ "$(ls -A $JENKINS_HOME_BACKUP_DIR)" ];
     if [ -f "${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP}" ]; then
         echo "Uncompressing and copying '${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP}' in $JENKINS_HOME..."
         set -x
-        tar xzfv ${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP} --directory /
+        tar xzf ${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP} --directory /
         set +x
     else
         echo "It seems that the last backup is a dir, just copying!"
