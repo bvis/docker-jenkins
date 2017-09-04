@@ -1,4 +1,4 @@
-FROM jenkinsci/jenkins
+FROM jenkins/jenkins
 
 MAINTAINER Basilio Vera <basilio.vera@softonic.com>
 
