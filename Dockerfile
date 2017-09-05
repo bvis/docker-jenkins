@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:alpine
+FROM jenkins/jenkins:2.77-alpine
 
 MAINTAINER Basilio Vera <basilio.vera@softonic.com>
 
@@ -23,8 +23,8 @@ LABEL org.label-schema.vendor="basi" \
 JENKINS_HOME_BACKUP_DIR=Where to find the backup of the jenkins data" \
     org.label-schema.build-date=$build_date
 
-ENV "DOCKER_COMPOSE_VERSION=1.12.0" \
-    "JENKINS_HOME_BACKUP_DIR=/backup/jenkins_home"
+ENV DOCKER_COMPOSE_VERSION="1.16.1" \
+    JENKINS_HOME_BACKUP_DIR="/backup/jenkins_home"
 
 # if we want to install via apt
 USER root
@@ -34,8 +34,7 @@ RUN apk add --no-cache sudo \
  && rm -rf /var/lib/apt/lists/* \
   && curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose \
   && chmod +x /usr/local/bin/docker-compose \
-# Jenkins user can execute Docker
-  && echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
+  && echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers # Jenkins user can execute Docker
 
 USER jenkins
 COPY plugins.txt /usr/share/jenkins/plugins.txt

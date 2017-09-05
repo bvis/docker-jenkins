@@ -1,34 +1,54 @@
 #!/bin/bash -e
 
-JENKINS_HOME=/var/jenkins_home
+: ${JENKINS_HOME:=/var/jenkins_home}
 
-if [ ! -d "$JENKINS_HOME" ]; then
-    mkdir -p $JENKINS_HOME
-fi
+create_jenkins_home() {
+  mkdir -p $JENKINS_HOME
+}
+
+is_backup_newer_than_current_home() {
+  last_backup=${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP}
+
+  date_jenkins_home=$(stat -c %Y $JENKINS_HOME)
+  date_jenkins_home_human=$(stat -c %y $JENKINS_HOME)
+  date_jenkins_backup=$(stat -c %Y $last_backup)
+  date_jenkins_backup_human=$(stat -c %y $last_backup)
+
+  if [ $date_jenkins_backup -gt $date_jenkins_home ]; then
+    echo "Last backup ($JENKINS_LAST_BACKUP [$date_jenkins_backup_human]) is newer than the current home [$date_jenkins_home_human], restore it!"
+    return 0;
+  else
+    echo "Last backup ($JENKINS_LAST_BACKUP) [$date_jenkins_backup_human]) is older than the current home [$date_jenkins_home_human], don't restore it!"
+    return 1;
+  fi
+}
+
+restore_backup() {
+  if [ -f "${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP}" ]; then
+    echo "Uncompressing and copying '${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP}' in $JENKINS_HOME..."
+    set -x
+    tar xzf ${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP} --directory /
+    set +x
+    echo "Content in backup dir '${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP}' copied to home dir '$JENKINS_HOME'"
+  else
+    echo "Something wrong has happened, the backup wasn't a file"
+  fi
+}
 
 if [ -d "$JENKINS_HOME_BACKUP_DIR" ] && [ "$(ls -A $JENKINS_HOME_BACKUP_DIR)" ]; then
   echo "Backup dir found"
-  if [ -z "$(ls -lsA1 $JENKINS_HOME | grep -v 'total 0')" ]; then
-    JENKINS_LAST_BACKUP=$(ls -1v $JENKINS_HOME_BACKUP_DIR | tail -1)
-    echo "Last backup is $JENKINS_LAST_BACKUP"
-    if [ -f "${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP}" ]; then
-        echo "Uncompressing and copying '${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP}' in $JENKINS_HOME..."
-        set -x
-        tar xzf ${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP} --directory /
-        set +x
-    else
-        echo "It seems that the last backup is a dir, just copying!"
-        cp -r ${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP}/* $JENKINS_HOME
-    fi
-    echo "Content in backup dir '${JENKINS_HOME_BACKUP_DIR}/${JENKINS_LAST_BACKUP}' copied to home dir '$JENKINS_HOME'"
+  JENKINS_LAST_BACKUP=$(ls -rt $JENKINS_HOME_BACKUP_DIR | tail -1)
+  if [ ! -d "$JENKINS_HOME" ]; then
+    create_jenkins_home
+    restore_backup
   else
-    echo "Backup found but existing data in jenkins home won't be overwritten"
-    set -ex
-    ls -lsA --ignore='.*' $JENKINS_HOME | grep -v 'total 0'
-    set +ex
+    if [ -z "$(ls -lsA1 $JENKINS_HOME | grep 'total 0')" ] || is_backup_newer_than_current_home; then
+      restore_backup
+    fi
   fi
 else
   echo "No jenkins_home backup found"
 fi
 
+ls -la $JENKINS_HOME
 exec "/usr/local/bin/jenkins.sh"

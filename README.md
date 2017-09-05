@@ -16,8 +16,10 @@ docker run --name softonic-jenkins \
     -v $(which docker):/usr/bin/docker \
     -v /var/jenkins_home:/var/jenkins_home basi/jenkins \
     --restart unless-stopped
+```
 
 
+```
 docker run --rm --name softonic-jenkins \
     -u root \
     -p 8080:8080 -p 50000:50000 \
