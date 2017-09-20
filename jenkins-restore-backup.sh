@@ -42,7 +42,7 @@ if [ -d "$JENKINS_HOME_BACKUP_DIR" ] && [ "$(ls -A $JENKINS_HOME_BACKUP_DIR)" ];
     create_jenkins_home
     restore_backup
   else
-    if [ -z "$(ls -lsA1 $JENKINS_HOME | grep 'total 0')" ] || is_backup_newer_than_current_home; then
+    if [ -z "$(ls -lsA1 $JENKINS_HOME | grep 'total 0')" ]; then
       restore_backup
     fi
   fi
