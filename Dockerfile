@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.77-alpine
+FROM jenkins/jenkins:2.82-alpine
 
 MAINTAINER Basilio Vera <basilio.vera@softonic.com>
 
