@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.82-alpine
+FROM jenkins/jenkins:2.92-alpine
 
 MAINTAINER Basilio Vera <basilio.vera@softonic.com>
 
@@ -23,7 +23,7 @@ LABEL org.label-schema.vendor="basi" \
 JENKINS_HOME_BACKUP_DIR=Where to find the backup of the jenkins data" \
     org.label-schema.build-date=$build_date
 
-ENV DOCKER_COMPOSE_VERSION="1.16.1" \
+ENV DOCKER_COMPOSE_VERSION="1.17.1" \
     JENKINS_HOME_BACKUP_DIR="/backup/jenkins_home"
 
 # if we want to install via apt
