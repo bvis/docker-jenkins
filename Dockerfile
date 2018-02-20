@@ -1,12 +1,12 @@
-FROM jenkins/jenkins:2.92-alpine
+FROM jenkins/jenkins:2.108-alpine
 
 MAINTAINER Basilio Vera <basilio.vera@softonic.com>
 
-ARG "version=0.1.0-dev"
-ARG "build_date=unknown"
-ARG "commit_hash=unknown"
-ARG "vcs_url=unknown"
-ARG "vcs_branch=unknown"
+ARG version="0.1.0-dev"
+ARG build_date="unknown"
+ARG commit_hash="unknown"
+ARG vcs_url="unknown"
+ARG vcs_branch="unknown"
 
 LABEL org.label-schema.vendor="basi" \
     org.label-schema.name="Jenkins" \
@@ -23,7 +23,7 @@ LABEL org.label-schema.vendor="basi" \
 JENKINS_HOME_BACKUP_DIR=Where to find the backup of the jenkins data" \
     org.label-schema.build-date=$build_date
 
-ENV DOCKER_COMPOSE_VERSION="1.17.1" \
+ENV DOCKER_COMPOSE_VERSION="1.19.0" \
     JENKINS_HOME_BACKUP_DIR="/backup/jenkins_home"
 
 # if we want to install via apt
