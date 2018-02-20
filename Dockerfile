@@ -47,4 +47,4 @@ RUN /usr/local/bin/install-plugins.sh $(cat /usr/share/jenkins/plugins.txt | tr 
 #HEALTHCHECK --interval=60s --timeout=5s --retries=3 \
 #  CMD curl -f -A "Docker-HealthCheck/v.x (https://docs.docker.com/engine/reference/builder/#healthcheck)" http://localhost:8080/ || exit 1
 
-ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins-restore-backup.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/jenkins-restore-backup.sh"]
